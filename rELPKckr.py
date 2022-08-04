@@ -4,6 +4,8 @@ import os
 import gzip
 
 
+__version__ = "1.2"
+
 
 def rchop(s, suffix):
     if suffix and s.endswith(suffix):
@@ -133,7 +135,7 @@ def repackELPK (path):
 
 
 if __name__ == '__main__':
-    print("rELPKckr by Capitán Retraso \n")
+    print(f"rELPKckr v{__version__} by Capitán Retraso \n")
     parser = argparse.ArgumentParser()
     parser.add_argument("input",  help='Input file (ELPK) or directory to pack', type=str)
     args = parser.parse_args()

@@ -1,6 +1,7 @@
 from binary_reader import BinaryReader
 import argparse
 import os
+import gzip
 
 
 
@@ -15,6 +16,12 @@ def extractELPK (path):
     f = open(path, "rb")
 
     reader = BinaryReader(f.read())
+
+    if reader.read_bytes(2) == b'\x1f\x8b':
+        # Decompress gzip
+        reader = BinaryReader(gzip.decompress(reader.buffer()))
+
+    reader.seek(0)
 
     if reader.read_str(4) != 'ELPK':
         raise Exception('Incorrect magic. Expected ELPK')

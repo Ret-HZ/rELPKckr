@@ -11,9 +11,9 @@ Supports drag & drop
 <br />
 <br />
 
-### Disclaimer
-Only tested with ***Kurohyou 2: Ryu ga Gotoku Ashura Hen***
-<br />
+### Supported games
+* Kurohyou: Ryu Ga Gotoku Shinsho 
+* Kurohyou 2: Ryu Ga Gotoku Ashura Hen
 <br />
 
 ### Credits

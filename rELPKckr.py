@@ -91,7 +91,7 @@ def get_name_from_hash(hash: int) -> str:
     return FILENAME_DICT.get(hash, hash_to_str(hash))
 
 
-def extractELPK (path):
+def extractELPK (path, extension_hash: bool):
     f = open(path, "rb")
 
     reader = BinaryReader(f.read())
@@ -162,6 +162,10 @@ def extractELPK (path):
 
         file_meta = dict()
         file_meta["HashIsName"] = True if hash_to_str(file_name_hash) == file_name else False
+
+        if extension_hash and not file_meta["HashIsName"]:
+            file_name = f'{file_name}._{hash_to_str(file_name_hash)}'
+
         file_meta["Hash"] = file_name_hash
         metadata["Files"][f"{file_name}.{newfile_magic}"] = file_meta
 
@@ -281,6 +285,7 @@ if __name__ == '__main__':
     print(f"Version: {__version__}\n")
     parser = argparse.ArgumentParser()
     parser.add_argument("input",  help='Input file (ELPK) or directory to pack', type=str)
+    parser.add_argument('-ext', '--extension-hash', action='store_true', help='Add hash (hex little endian) before file extension when unpacking, if the filename is available (does not affect repacking)')
     if len(sys.argv) < 2:
         parser.print_help()
         input("\nPress ENTER to exit...")
@@ -290,6 +295,6 @@ if __name__ == '__main__':
     path = args.input
 
     if os.path.isfile(path):
-        extractELPK(path)
+        extractELPK(path, args.extension_hash)
     if os.path.isdir(path):
         repackELPK(path)

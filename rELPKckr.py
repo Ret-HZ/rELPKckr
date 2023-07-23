@@ -60,6 +60,14 @@ def hash_fnv0(string):
     return result
 
 
+def hash_to_str(val: int):
+    return val.to_bytes(4, byteorder='little').hex().upper()
+
+
+def hash_to_int(val: str):
+    return int.from_bytes(bytes.fromhex(val), byteorder='little')
+
+
 def open_filename_list():
     filepath = os.path.join(os.path.dirname(__file__), "filenames.txt")
 
@@ -79,7 +87,8 @@ def open_filename_list():
 
 def get_name_from_hash(hash: int) -> str:
     global FILENAME_DICT
-    return FILENAME_DICT.get(hash, str(hash))
+    # Return file name if available, else hash bytes in little endian hexadecimal
+    return FILENAME_DICT.get(hash, hash_to_str(hash))
 
 
 def extractELPK (path):
@@ -152,7 +161,7 @@ def extractELPK (path):
             os.makedirs(folder_name)
 
         file_meta = dict()
-        file_meta["HashIsName"] = True if str(file_name_hash) == file_name else False
+        file_meta["HashIsName"] = True if hash_to_str(file_name_hash) == file_name else False
         file_meta["Hash"] = file_name_hash
         metadata["Files"][f"{file_name}.{newfile_magic}"] = file_meta
 
@@ -183,7 +192,7 @@ def writeELPKContent (writer: BinaryReader, main_table_pos: int, path: str, file
 
     writer.seek(main_table_pos) #Go back to the main table and update the corresponding data
     if hash_is_name:
-        writer.write_uint32(int(filename_no_ext))
+        writer.write_uint32(hash_to_int(filename_no_ext))
     else:
         writer.write_uint32(int(hash_fnv0(filename_no_ext)))
     writer.write_uint32(data_ptr)

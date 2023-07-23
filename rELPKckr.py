@@ -62,6 +62,10 @@ def hash_fnv0(string):
 
 def open_filename_list():
     filepath = os.path.join(os.path.dirname(__file__), "filenames.txt")
+
+    if not os.path.exists(filepath):
+        return
+
     with open(filepath, "r") as file:
         global FILENAME_DICT
         filename_list = file.readlines()

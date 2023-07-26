@@ -250,8 +250,11 @@ def repackELPK (path):
 
     #Write files listed in metadata first, then other files found in the directory
     for filename in file_list_in_meta:
-        main_table_pos = writeELPKContent(writer, main_table_pos, path, filename, metadata["Files"][filename]["HashIsName"])
-        file_list.remove(filename)
+        try:
+            main_table_pos = writeELPKContent(writer, main_table_pos, path, filename, metadata["Files"][filename]["HashIsName"])
+            file_list.remove(filename)
+        except: #The file is listed in the metadata file but isn't present in the directory
+            print(f"{filename} was missing or could not be written. Skipping...")
 
     for filename in file_list:
         main_table_pos = writeELPKContent(writer, main_table_pos, path, filename, False)
